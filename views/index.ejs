@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%=title%></title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</head>
+<body id="body">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <form action="/search/" id="EmployeeForm" class="form-horizontal" method="post" role="form">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="name" class="col-md-12 control-label">By Name</label>
+                                <div class="col-md-12">
+                                    <input type="text" id="searchName" class="form-control" name="fltrname" placeholder="Enter Name">
+                                </div>
+                            </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="email" class="col-md-12 control-label">By Email</label>
+                                <div class="col-md-12">
+                                    <input type="text" class="form-control" name="fltremail" placeholder="Enter Email">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="email" class="col-md-12 control-label">By Employee Type</label>
+                                <div class="col-md-12">
+                                    <select class="form-control" name="fltremptype">
+                                        <option value="hourly">Hourly</option>
+                                        <option value="Fixed">Fixed</option>
+                                    </select>
+                                </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="email" class="col-md-12 control-label">&nbsp;</label>
+                            <div class="col-md-12">
+                                <input type="submit" class="form-control btn btn-primary" name="submit" placeholder="Filter">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="table-responsive">
+                <h1><%= title %></h1>
+                <div class="btn-group pull-right" style=" padding: 10px;">
+                    <div class="dropdown">
+                        <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><span class="glyphicon glyphicon-th-list"></span>Export Table</button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <li><a href="#" onclick="$('#Employeelist').tableHTMLExport({type:'json',filename:'sample.json'});"> <img src="images/json.jpg" width="24px"> JSON</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#" onclick="$('#Employeelist').tableExport({type:'xml',escape:'false'});"> <img src="images/xml.png" width="24px"> XML</a></li>
+                            <li><a href="#" onclick="$('#Employeelist').tableExport({type:'sql'});"> <img src="images/sql.png" width="24px"> SQL</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#" onclick="$('#Employeelist').tableHTMLExport({type:'csv',filename:'sample.csv'});"> <img src="images/csv.png" width="24px"> CSV</a></li>
+                            <li><a href="#" onclick="$('#Employeelist').tableHTMLExport({type:'txt',filename:'sample.txt'});"> <img src="images/txt.png" width="24px"> TXT</a></li>
+                            <li class="divider"></li>
+                            <!-- pptx.tableToSlides('#Employeelist'); -->
+                            <li><a href="#" onclick="$('#Employeelist').tableExport({type:'excel',escape:'false',tableName:'Sample'});"> <img src="images/xls.png" width="24px"> XLS</a></li>
+                            <li><a href="#" onclick="$('#Employeelist').tableExport({type:'doc',escape:'false',tableName:'Sample'});"> <img src="images/word.png" width="24px"> Word</a></li>
+                            <li><a href="#" id="myButton" onclick="redirect()"><img src="images/ppt.png" width="24px">PowerPoint</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#" id="png" onclick="$('#Employeelist').tableExport({type:'png',escape:'false'});"> <img src="images/png.png" width="24px">PNG(click 2 times)</a></li>
+                            <li><a href="#" onclick="$('#Employeelist').tableHTMLExport({type:'pdf',filename:'sample.pdf'});"> <img src="images/pdf.png" width="24px">PDF</a></li>
+                       </ul>
+                    </div>
+                </div>
+                <table id="Employeelist" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Type</th>
+                            <th>Hourly Rate</th>
+                            <th>Subject</th>
+                            <th>Total Hour</th>
+                            <th>Total</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%if (record.length >0){ %>
+                            <% record.forEach(function(row){ %>
+                            <tr>
+                                <td onclick="edit('<%= row._id%>')"><%= row.name %></td>
+                                <td onclick="edit('<%= row._id%>')"><%= row.email %></td>
+                                <td onclick="edit('<%= row._id%>')"><%= row.type %></td>
+                                <td onclick="edit('<%= row._id%>')"><%= row.hourlyrate %></td>
+                                <td onclick="edit('<%= row._id%>')"><%= row.subject %></td>
+                                <td onclick="edit('<%= row._id%>')"><%= row.totalhour%></td>
+                                <td onclick="edit('<%= row._id%>')"><%= row.total %></td>
+                                <td><!-- <a class="btn btn-primary btn-s" href="/edit/<%= row._id%>"><i class="fa fa-edit"></i></a> -->
+                                    <a class="btn btn-danger btn-s" href="/delete/<%= row._id%>"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+                            <% })}else{%>
+                                <tr>
+                                    <td colspan="6">No Record Found</td>
+                                </tr>
+                            <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <input type="button" class="form-control btn btn-success" name="Export" value="Export Table" id="btnExport">
+            </div>
+            <div class="col-md-3">
+                <input type="button" class="form-control btn btn-warning" name="Full" value="Export Full page" id="Full">
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div id="signupbox" style="margin-top:50px" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <div class="panel-title">Employee Details Form</div>
+                        <div style="float:right; font-size:85%; position:relative; top:-10px;"></div>
+                    </div>
+                    <div class="panel-body" >
+                        <form action="/" class="form-horizontal" method="post" role="form">
+                            <div id="signupalert" style="display:none" class="alert alert-danger">
+                                <p>Error:</p>
+                                <span></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="uname" class="col-md-3 control-label">Name</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" name="uname" placeholder="Enter Your Name">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="email" class="col-md-3 control-label">Email</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" name="email" placeholder="Email Address">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="emptype" class="col-md-3 control-label">Employee Type</label>
+                                <div class="col-md-9">
+                                    <select class="form-control" name="emptype">
+                                        <option value="Hourly">Hourly</option>
+                                        <option value="Fixed">Fixed</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="hrlyrate" class="col-md-3 control-label">Hourly Rate</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" name="hrlyrate" placeholder="Enter Hourly Rate">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="usubject" class="col-md-3 control-label">subject</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" name="usubject" placeholder="Enter Your Subject">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="ttlhr" class="col-md-3 control-label"> Total Hour</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" name="ttlhr" placeholder="Enter Total Hours">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-offset-3 col-md-9">
+                                <input type="submit" name="submit" value="submit" class="btn btn-primary">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(function(){
+            $('#searchName').autocomplete({
+                source: function(req,res){
+                    $.ajax({
+                        url:"autocomplete/",
+                        dataType:"jsonp",
+                        type:"GET",
+                        data:req,
+                        success:function(data){
+                            res(data);
+                        },
+                        error:function(err){
+                            console.log(err.status);
+                        }
+                    });
+                },
+                minLength:1,
+                select: function(event,ui){
+                    if(ui.item){
+                        $('#searchName').text(ui.item.label);
+                    }
+                }
+            });
+        });
+    </script>
+    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Table to pdf -->
+    <script src="./javascripts/tableExport.js"></script>
+    <script src="./javascripts/tableHTMLExport.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.4.1/jspdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/2.3.5/jspdf.plugin.autotable.min.js"></script>
+    <script type="text/javascript" src="./javascripts/jquery.base64.js"></script>
+    <!-- -->
+
+    <script>
+        $(document).ready(function(){
+            $('#Employeelist').DataTable();
+        });
+        function edit(val){
+            window.location.href="/edit/"+val;
+        };
+        function redirect(){
+            window.location.href="./genratePpt";
+        };
+    </script>
+</body>
+</html>
